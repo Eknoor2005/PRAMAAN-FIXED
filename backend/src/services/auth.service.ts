@@ -35,7 +35,7 @@ export class AuthService {
         role,
         publicKey,
       },
-      process.env.JWT_SECRET || 'secret',
+      process.env.JWT_SECRET as string,
       {
         expiresIn: process.env.JWT_ACCESS_EXPIRY || '15m',
       }
@@ -50,7 +50,7 @@ export class AuthService {
       {
         userId,
       },
-      process.env.JWT_SECRET || 'secret',
+      process.env.JWT_SECRET as string,
       {
         expiresIn: process.env.JWT_REFRESH_EXPIRY || '7d',
       }
@@ -62,7 +62,7 @@ export class AuthService {
    */
   static verifyToken(token: string): any {
     try {
-      return jwt.verify(token, process.env.JWT_SECRET || 'secret');
+      return jwt.verify(token, process.env.JWT_SECRET as string);
     } catch (error) {
       throw new Error('Invalid token');
     }

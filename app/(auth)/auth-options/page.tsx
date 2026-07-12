@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Shield, Mail, Chrome, Github, ArrowRight } from 'lucide-react';
+import { Shield, Mail, Chrome, ArrowRight } from 'lucide-react';
 
 export default function AuthOptionsPage() {
   const router = useRouter();
@@ -37,15 +37,6 @@ export default function AuthOptionsPage() {
       color: 'from-red-400 to-red-600',
       features: ['One-click login', 'Secure Google Auth', 'Email auto-filled'],
     },
-    {
-      id: 'github',
-      title: 'GitHub Sign-In',
-      description: 'For developers. Use your GitHub account to access PRAMAAN.',
-      icon: Github,
-      href: '/firebase/login',
-      color: 'from-gray-700 to-gray-900',
-      features: ['GitHub verified', 'Developer friendly', 'Secure tokens'],
-    },
   ];
 
   return (
@@ -65,7 +56,7 @@ export default function AuthOptionsPage() {
         </p>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-4">
+      <div className="grid md:grid-cols-2 gap-4">
         {authOptions.map((option) => {
           const Icon = option.icon;
           return (

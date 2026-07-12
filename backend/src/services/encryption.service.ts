@@ -17,7 +17,7 @@ export class EncryptionService {
         type: 'pkcs8',
         format: 'pem',
         cipher: 'aes-256-cbc',
-        passphrase: process.env.JWT_SECRET || 'default-passphrase',
+        passphrase: process.env.ENCRYPTION_PASSPHRASE as string,
       },
     });
   }

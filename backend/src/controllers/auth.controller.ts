@@ -10,7 +10,7 @@ const signupSchema = Joi.object({
   password: Joi.string().min(8).required(),
   firstName: Joi.string().required(),
   lastName: Joi.string().required(),
-  role: Joi.string().valid('survivor', 'advocate').default('survivor'),
+  role: Joi.string().valid('survivor', 'lawyer', 'police', 'ngo').default('survivor'),
   phone: Joi.string().optional(),
   country: Joi.string().optional(),
 });
@@ -48,8 +48,15 @@ export class AuthController {
       // Generate RSA key pair
       const { publicKey, privateKey } = EncryptionService.generateKeyPair();
 
-      // Create user
-      const user = new UserModel({
+      // Prevent admin registration
+      if (role === 'admin') {
+        res.status(403).json({
+          success: false,
+          error: 'Unauthorized role',
+          statusCode: 403,
+        });
+        return;
+      }
         email,
         password: hashedPassword,
         firstName,

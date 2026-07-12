@@ -9,7 +9,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
-import { auth, googleProvider, githubProvider } from '@/lib/firebase';
+import { auth, googleProvider } from '@/lib/firebase';
 import { firebaseSignup, firebaseLogin, firebaseSocialAuth } from '@/lib/api-client';
 import {
   Card,
@@ -27,7 +27,6 @@ import {
   Eye,
   EyeOff,
   Chrome,
-  Github,
   ArrowRight,
   Loader2,
 } from 'lucide-react';
@@ -116,7 +115,7 @@ export default function FirebaseAuthPage() {
     }
   };
 
-  const handleSocialAuth = async (provider: typeof googleProvider | typeof githubProvider, providerName: string) => {
+  const handleSocialAuth = async (provider: typeof googleProvider, providerName: string) => {
     setErrorMessage('');
     setIsLoading(true);
 
@@ -172,7 +171,7 @@ export default function FirebaseAuthPage() {
           )}
 
           {/* Social Auth Buttons */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3">
             <Button
               type="button"
               variant="outline"
@@ -182,16 +181,6 @@ export default function FirebaseAuthPage() {
             >
               <Chrome className="w-4 h-4" />
               Google
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => handleSocialAuth(githubProvider, 'GitHub')}
-              disabled={isLoading}
-              className="gap-2"
-            >
-              <Github className="w-4 h-4" />
-              GitHub
             </Button>
           </div>
 

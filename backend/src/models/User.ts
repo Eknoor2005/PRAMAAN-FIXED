@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema<User>(
     },
     role: {
       type: String,
-      enum: ['survivor', 'advocate', 'admin'],
+      enum: ['survivor', 'lawyer', 'police', 'ngo', 'admin'],
       default: 'survivor',
     },
     phone: {
@@ -71,7 +71,7 @@ const userSchema = new mongoose.Schema<User>(
     },
     authMethod: {
       type: String,
-      enum: ['jwt', 'firebase', 'google', 'github'],
+      enum: ['jwt', 'firebase', 'google'],
       default: 'jwt',
     },
     linkedAuthMethods: {

@@ -55,13 +55,13 @@ export class FirebaseController {
           role: user.role,
           firebaseUid: user.firebaseUid,
         },
-        process.env.JWT_SECRET || 'your-secret-key',
+        process.env.JWT_SECRET,
         { expiresIn: '15m' }
       );
 
       const refreshToken = jwt.sign(
         { userId: user._id },
-        process.env.JWT_REFRESH_SECRET || 'your-refresh-secret',
+        process.env.JWT_REFRESH_SECRET,
         { expiresIn: '7d' }
       );
 
@@ -142,13 +142,13 @@ export class FirebaseController {
           role: user.role,
           firebaseUid: user.firebaseUid,
         },
-        process.env.JWT_SECRET || 'your-secret-key',
+        process.env.JWT_SECRET,
         { expiresIn: '15m' }
       );
 
       const refreshToken = jwt.sign(
         { userId: user._id },
-        process.env.JWT_REFRESH_SECRET || 'your-refresh-secret',
+        process.env.JWT_REFRESH_SECRET,
         { expiresIn: '7d' }
       );
 
@@ -243,13 +243,13 @@ export class FirebaseController {
           role: user.role,
           firebaseUid: user.firebaseUid,
         },
-        process.env.JWT_SECRET || 'your-secret-key',
+        process.env.JWT_SECRET,
         { expiresIn: '15m' }
       );
 
       const refreshToken = jwt.sign(
         { userId: user._id },
-        process.env.JWT_REFRESH_SECRET || 'your-refresh-secret',
+        process.env.JWT_REFRESH_SECRET,
         { expiresIn: '7d' }
       );
 

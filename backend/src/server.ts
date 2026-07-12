@@ -30,14 +30,23 @@ app.use(
   })
 );
 
-// Rate limiting
-const limiter = rateLimit({
+// General rate limiting
+const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
   message: 'Too many requests from this IP, please try again later.',
 });
 
-app.use('/api/', limiter);
+// Login rate limiting
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // limit each IP to 5 requests per windowMs
+  message: 'Too many login attempts from this IP, please try again later.',
+});
+
+app.use('/api/', generalLimiter);
+app.use('/api/auth/', loginLimiter);
+app.use('/api/auth/firebase/', loginLimiter);
 
 // Body parser
 app.use(express.json({ limit: '50mb' }));

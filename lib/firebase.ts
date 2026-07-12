@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, GithubAuthProvider } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
@@ -22,12 +22,9 @@ export const storage = getStorage(app);
 
 // Initialize providers
 export const googleProvider = new GoogleAuthProvider();
-export const githubProvider = new GithubAuthProvider();
 
 // Set scopes for social auth
 googleProvider.addScope('profile');
 googleProvider.addScope('email');
-
-githubProvider.addScope('user:email');
 
 export default app;

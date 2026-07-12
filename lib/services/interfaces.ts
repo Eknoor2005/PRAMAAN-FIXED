@@ -16,7 +16,19 @@ export interface DatabaseService {
   saveTestimony(testimony: any): Promise<any>;
   getTestimonies(): Promise<any[]>;
   saveEvidence(evidence: any): Promise<any>;
-  getEvidence(): Promise<any[]>;
+  getEvidence(): Promise<EvidenceRecord[]>;
+  deleteEvidence(id: string): Promise<void>;
+}
+
+export interface EvidenceRecord {
+  _id: string;
+  fileName: string;
+  fileType: 'document' | 'photo' | 'video' | 'audio';
+  fileSize: number;
+  fileUrl: string;
+  category?: string;
+  description?: string;
+  createdAt: string;
 }
 
 export interface StorageService {

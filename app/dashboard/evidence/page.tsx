@@ -27,7 +27,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { listEvidence, deleteEvidenceRecord, EvidenceRecord } from "@/lib/api-client";
+import { databaseService } from "@/lib/services/service-factory";
+import { EvidenceRecord } from "@/lib/services/interfaces";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -59,7 +60,7 @@ export default function EvidenceVaultPage() {
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
-    listEvidence()
+    databaseService.getEvidence()
       .then((items) => {
         if (!cancelled) setEvidence(items);
       })
@@ -78,7 +79,7 @@ export default function EvidenceVaultPage() {
     if (!confirm("Delete this evidence item? This cannot be undone.")) return;
     setDeletingId(id);
     try {
-      await deleteEvidenceRecord(id);
+      await databaseService.deleteEvidence(id);
       setEvidence((prev) => prev.filter((item) => item._id !== id));
     } catch (err) {
       setErrorMessage(err instanceof Error ? err.message : "Failed to delete evidence");

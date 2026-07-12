@@ -4,7 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Video, Square, Play, Download, X, Loader2 } from "lucide-react";
+import { Video, Square, Play, Download, X, Loader2, Save } from "lucide-react";
+import { storageService } from "@/lib/services/service-factory";
 
 export function CameraRecorder() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -69,10 +70,24 @@ export function CameraRecorder() {
     }
   };
 
-  const stopRecording = () => {
+  const stopRecording = async () => {
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
+      
+      // Add a small delay to ensure chunks are gathered
+      setTimeout(async () => {
+        const blob = new Blob(recordedChunks, { type: "video/webm" });
+        const file = new File([blob], `recording-${Date.now()}.webm`, { type: "video/webm" });
+        
+        try {
+          const url = await storageService.uploadFile(file);
+          console.log("File saved to mock storage:", url);
+          setPreview(url);
+        } catch (error) {
+          console.error("Failed to save recording:", error);
+        }
+      }, 500);
     }
   };
 

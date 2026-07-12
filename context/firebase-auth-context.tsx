@@ -1,70 +1,68 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User as FirebaseUser, onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { authService } from '@/lib/services/service-factory';
+import { User } from '@/lib/services/interfaces';
 
-interface FirebaseAuthContextType {
-  user: FirebaseUser | null;
+interface AuthContextType {
+  user: User | null;
   loading: boolean;
   error: string | null;
+  login: (email: string, password: string) => Promise<void>;
+  signup: (email: string, password: string, name: string, role: string) => Promise<void>;
   logout: () => Promise<void>;
-  getIdToken: () => Promise<string | null>;
 }
 
-const FirebaseAuthContext = createContext<FirebaseAuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function FirebaseAuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<FirebaseUser | null>(null);
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(
-      auth,
-      (currentUser) => {
-        setUser(currentUser);
-        setLoading(false);
-      },
-      (err) => {
-        setError(err.message);
-        setLoading(false);
-      }
-    );
-
-    return () => unsubscribe();
+    // Check local storage on load
+    const currentUser = authService.getCurrentUser();
+    setUser(currentUser);
+    setLoading(false);
   }, []);
 
-  const logout = async () => {
+  const login = async (email: string, password: string) => {
     try {
-      await signOut(auth);
-      setUser(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Logout failed');
+      const loggedUser = await authService.login(email, password);
+      setUser(loggedUser);
+    } catch (err: any) {
+      setError(err.message);
+      throw err;
+    }
+  };
+  
+  const signup = async (email: string, password: string, name: string, role: string) => {
+    try {
+      const newUser = await authService.signup(email, password, name, role);
+      setUser(newUser);
+    } catch (err: any) {
+      setError(err.message);
       throw err;
     }
   };
 
-  const getIdToken = async () => {
-    try {
-      return await user?.getIdToken() ?? null;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to get token');
-      return null;
-    }
+  const logout = async () => {
+    await authService.logout();
+    setUser(null);
   };
 
   return (
-    <FirebaseAuthContext.Provider value={{ user, loading, error, logout, getIdToken }}>
+    <AuthContext.Provider value={{ user, loading, error, login, signup, logout }}>
       {children}
-    </FirebaseAuthContext.Provider>
+    </AuthContext.Provider>
   );
 }
 
-export function useFirebaseAuth() {
-  const context = useContext(FirebaseAuthContext);
+export function useAuth() {
+  const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useFirebaseAuth must be used within FirebaseAuthProvider');
+    throw new Error('useAuth must be used within AuthProvider');
   }
   return context;
 }
